@@ -1,0 +1,21 @@
+.auth__send {
+    width: 100%;
+    background: #FFFFFF;
+    border-radius: 2px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 22px;
+    color: #000000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 14px 0;
+    margin-bottom: 15px;
+}
+
+.auth__send:hover {
+    opacity: 0.85;
+    cursor: pointer;
+}

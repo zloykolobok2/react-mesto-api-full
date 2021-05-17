@@ -1,0 +1,31 @@
+.profile__avatar-upload {
+  display: block;
+  position: relative;
+}
+
+.profile__avatar-upload.profile__avatar-upload:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,.8);
+  opacity: 0;
+}
+
+.profile__avatar-upload:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('../../../images/pencil.svg') no-repeat center center;
+  opacity: 0;
+}
+
+.profile__avatar-upload:hover:before,
+.profile__avatar-upload:hover:after {
+  opacity: 1;
+}

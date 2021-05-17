@@ -1,0 +1,15 @@
+.root__link {
+  transition: 0.2s;
+  font-family: Inter;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 18px;
+  line-height: 22px;
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+.root__link:hover {
+  opacity: 0.6;
+  cursor: pointer;
+}

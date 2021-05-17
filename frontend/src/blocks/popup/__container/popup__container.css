@@ -1,0 +1,20 @@
+.popup__container {
+  display: inline-flex;
+  flex-direction: column;
+  /* width: 282px; */
+  padding-top: 49px;
+  /* border: 1px solid red;
+  box-sizing: border-box; */
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+}
+
+@media screen and (min-width: 1280px) {
+  .popup__container {
+    /* width: 430px; */
+    padding: 49px;
+    position: relative;
+  }
+}

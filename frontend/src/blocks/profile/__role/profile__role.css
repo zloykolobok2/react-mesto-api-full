@@ -1,0 +1,36 @@
+.profile__role {
+  max-width: 210px;
+  font-family: Inter, Arial, Helvetica, sans-serif;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #FFFFFF;
+  margin: 10px 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media screen and (min-width: 620px) {
+  .profile__role {
+    text-align: left;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  .profile__role {
+    max-width: 400px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .profile__role {
+    max-width: 500px;
+    font-size: 18px;
+    line-height: 22px;
+    margin-top: 7px;
+    overflow: hidden;
+  }
+}

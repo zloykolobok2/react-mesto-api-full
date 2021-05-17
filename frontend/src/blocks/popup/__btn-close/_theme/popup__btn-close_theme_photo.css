@@ -1,0 +1,19 @@
+.popup__btn-close_theme_photo {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  top: 20px;
+  right: 20px;
+  margin: 0;
+  background-size: 140%;
+  padding: 0;
+}
+
+@media screen and (min-width: 1280px) {
+  .popup__btn-close_theme_photo {
+    width: 45px;
+    height: 45px;
+    right: 5px;
+    top: 6px;
+  }
+}

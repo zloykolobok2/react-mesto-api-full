@@ -1,0 +1,26 @@
+.places__card {
+  margin: 0 auto 20px auto;
+  width: 282px;
+  height: 362px;
+  background: #FFFFFF;
+  border-radius: 10px;
+  position: relative;
+}
+
+.places__card:last-child {
+  margin-bottom: 0;
+}
+
+@media screen and (min-width: 620px) {
+  .places__card {
+    margin: 0;
+  }
+
+  .places__card:nth-child(1n) {
+    justify-self: flex-end;
+  }
+
+  .places__card:nth-child(2n) {
+    justify-self: flex-start;
+  }
+}

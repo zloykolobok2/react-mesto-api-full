@@ -1,0 +1,19 @@
+.root__section {
+  box-sizing: border-box;
+  padding: 0 19px;
+  margin: auto;
+}
+
+@media screen and (min-width: 620px) {
+  .root__section {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+@media screen and (min-width: 900px) {
+  .root__section {
+    padding-left: 0;
+    padding-right: 0;
+  }
+}

@@ -1,0 +1,9 @@
+.popup__container_theme_form {
+  width: 282px;
+}
+
+@media screen and (min-width: 1280px) {
+  .popup__container_theme_form {
+    width: 430px;
+  }
+}

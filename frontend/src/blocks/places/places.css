@@ -1,0 +1,16 @@
+.places {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* width: calc(100% - 38px); */
+}
+
+@media screen and (min-width: 620px) {
+  .places {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(282px, 1fr));
+    /* justify-items: center; */
+    gap: 17px;
+  }
+}

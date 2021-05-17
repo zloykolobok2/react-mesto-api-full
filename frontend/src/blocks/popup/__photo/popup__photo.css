@@ -1,0 +1,6 @@
+.popup__photo {
+  /* max-width: 100%; */
+  max-height: calc(75vh - 25px);
+  object-fit: contain;
+  object-position: top;
+}
