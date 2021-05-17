@@ -47,7 +47,7 @@ module.exports.getUserList = (req, res, next) => {
 
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.params.id)
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send({ user }))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new NotFoundError('Пользователь по указанному _id не найден.'));
@@ -60,7 +60,7 @@ module.exports.getUserById = (req, res, next) => {
 
 module.exports.getCurrentUser = (req, res, next) => {
   User.findById(req.user._id)
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send({ user }))
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new NotFoundError('Пользователь по указанному _id не найден.'));
@@ -76,7 +76,7 @@ module.exports.updateUserInfo = (req, res, next) => {
   const { _id } = req.user;
 
   User.findByIdAndUpdate(_id, { name, about }, { new: true, runValidators: true })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send({ user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError('Переданы некорректные данные при обновлении профиля.'));
@@ -96,7 +96,7 @@ module.exports.updateUserAvatar = (req, res, next) => {
   const { _id } = req.user;
 
   User.findByIdAndUpdate(_id, { avatar }, { new: true, runValidators: true })
-    .then((user) => res.send({ data: user }))
+    .then((user) => res.send({ user }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError(err.message));
@@ -116,16 +116,13 @@ module.exports.login = (req, res, next) => {
     email, password,
   } = req.body;
 
+  console.log('----------------', email, password);
+
   User.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
 
-      res
-        .cookie('jwt', token, {
-          maxAge: 604800000,
-          httpOnly: true,
-        })
-        .send({ token });
+      res.send({ user, token });
     })
     .catch((err) => next(new UnauthorizedError(err.message)));
 };

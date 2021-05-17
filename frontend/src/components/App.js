@@ -42,30 +42,35 @@ function App() {
 
   React.useEffect(() => {
     checkToken();
-  }, []);
+  }, [history]);
+
+  // React.useEffect(() => {
+  //   if (loggedIn) {
+  //
+  //   }
+  // }, [history])
 
   React.useEffect(() => {
     if (loggedIn) {
       history.push('/cards');
-    }
-  }, [loggedIn, history])
+      api.getProfile()
+        .then((data) => {
+          console.log('--- 1 ---', data);
+          setCurrentUser(data);
+        })
+        .catch((res) => {
+          console.log(res);
+        });
 
-  React.useEffect(() => {
-    api.getProfile()
-      .then((data) => {
-        setCurrentUser(data);
-      })
-      .catch((res) => {
-        console.log(res);
-      });
-    api.getCardList()
-      .then((data) => {
-        setCards(data);
-      })
-      .catch((res) => {
-        console.log(res);
-      });
-  }, []);
+      api.getCardList()
+        .then((data) => {
+          setCards(data);
+        })
+        .catch((res) => {
+          console.log(res);
+        });
+    }
+  }, [loggedIn, history]);
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
@@ -159,9 +164,10 @@ function App() {
   const handlerLoginSubmit = ({email, password}) => {
     api.login({email, password})
       .then((data) => {
+        setCurrentUser(data);
+        localStorage.setItem('jwt', data.token);
         setLoggedIn(true);
         setEmail(email);
-        localStorage.setItem('jwt', data.token);
         history.push('/cards');
       })
       .catch((err) => {
@@ -181,13 +187,18 @@ function App() {
       if(jwt) {
         api.checkToken(jwt)
           .then(data => {
-            setEmail(data.data.email);
+
+            setEmail(data.user.email);
+            setCurrentUser(data);
             setLoggedIn(true);
+            console.log('--- 2 ---', data);
           })
           .catch(err => {
             console.log(err);
           })
       }
+    } else {
+      history.push('/signin');
     }
   }
 
@@ -198,7 +209,7 @@ function App() {
             <Switch>
 
               <ProtectedRoute
-                path="/"
+                path="/cards"
                 exact = {true}
                 loggedIn = {loggedIn}
                 component={Main}

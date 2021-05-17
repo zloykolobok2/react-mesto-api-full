@@ -2,7 +2,9 @@ import React from "react";
 import Card from "./Card";
 import {CurrentUserContext} from "../contexts/CurrentUserContext";
 
+
 function Main(props) {
+
   const currentUser = React.useContext(CurrentUserContext);
 
   const handleCardClick = (card) => {
@@ -25,17 +27,18 @@ function Main(props) {
     e.preventDefault();
     props.onEditAvatar();
   }
+  console.log('--- 3 ---', currentUser);
 
   return (
     <>
       <section className="profile root__section">
         <a href="/" className="profile__avatar-upload" target="_self" onClick={onEditAvatar}>
-          <img src={currentUser.avatar} alt="аватар" className="profile__avatar"/>
+          <img src={currentUser.user.avatar} alt="аватар" className="profile__avatar"/>
         </a>
         <div className="profile__info">
           <div className="profile__info-wrap">
             <h1 className="profile__name">
-              {currentUser.name}
+              {currentUser.user.name}
             </h1>
             <button
               type="button"
@@ -46,7 +49,7 @@ function Main(props) {
             </button>
           </div>
           <p className="profile__role">
-            {currentUser.about}
+            {currentUser.user.about}
           </p>
         </div>
         <button
@@ -61,15 +64,15 @@ function Main(props) {
       <section className="cards root__section root__cards">
         <ul className="places">
           {
-            props.cards.map((card) => (
-              <Card
-                card={card}
-                key={card._id}
-                onClick={handleCardClick}
-                onCardLike={onCardLike}
-                onCardDelete={onCardDelete}
-              />)
-            )
+            // props.cards.map((card) => (
+            //   <Card
+            //     card={card}
+            //     key={card._id}
+            //     onClick={handleCardClick}
+            //     onCardLike={onCardLike}
+            //     onCardDelete={onCardDelete}
+            //   />)
+            // )
           }
         </ul>
       </section>
