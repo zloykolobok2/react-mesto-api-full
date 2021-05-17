@@ -15,7 +15,6 @@ import AddPlacePopup from "./AddPlacePopup";
 import {CurrentUserContext} from '../contexts/CurrentUserContext';
 
 import api from "../utils/api";
-import {LINKS} from "../utils/utils"
 
 import ErrorMessagePopup from "./ErrorMessagePopup";
 import SuccessMessagePopup from "./SuccessMessagePopup";
@@ -47,7 +46,7 @@ function App() {
 
   React.useEffect(() => {
     if (loggedIn) {
-      history.push(LINKS.home);
+      history.push('/cards');
     }
   }, [loggedIn, history])
 
@@ -149,7 +148,7 @@ function App() {
   const handleRegisterSubmit = ({email, password}) => {
     api.register({email, password})
       .then((data) => {
-        history.push(LINKS.login);
+        history.push('/signin');
         setIsSuccessPopupOpen(true);
       })
       .catch((err) => {
@@ -163,7 +162,7 @@ function App() {
         setLoggedIn(true);
         setEmail(email);
         localStorage.setItem('jwt', data.token);
-        history.push(LINKS.home);
+        history.push('/cards');
       })
       .catch((err) => {
         setIsErrorPopupOpen(true);
@@ -172,7 +171,7 @@ function App() {
 
   const handleLogout = () => {
     localStorage.removeItem('jwt');
-    history.push(LINKS.login);
+    history.push('/signin');
   }
 
   const checkToken = () => {
@@ -212,13 +211,13 @@ function App() {
                 cards={cards}
               />
 
-              <Route path="/sign-in">
+              <Route path="/signin">
                 <Login
                   onSubmit = {handlerLoginSubmit}
                 />
               </Route>
 
-              <Route path="/sign-up">
+              <Route path="/signup">
                 <Register
                   onSubmit = {handleRegisterSubmit}
                 />

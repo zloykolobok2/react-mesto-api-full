@@ -1,6 +1,6 @@
 import React from 'react';
 import {Link} from "react-router-dom";
-import {LINKS} from "../utils/utils";
+// import {LINKS} from "../utils/utils";
 
 function Register(props) {
   const [email, setEmail] = React.useState('');
@@ -48,7 +48,7 @@ function Register(props) {
         >
           Зарегистрироваться
         </button>
-        <span className="auth__text">Уже зарегистрированы? <Link className="auth__link" to={LINKS.login}>Войти</Link></span>
+        <span className="auth__text">Уже зарегистрированы? <Link className="auth__link" to='/signin'>Войти</Link></span>
       </div>
     </form>
   );
