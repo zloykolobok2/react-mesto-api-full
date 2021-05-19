@@ -1,3 +1,3 @@
 export const apiConfig = {
-  url: 'http://localhost:3001',
+  url: 'https://api.rnikolaenkov.nomoredomains.icu',
 };

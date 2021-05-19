@@ -37,40 +37,47 @@ function App() {
   const [email, setEmail] = React.useState('');
 
   const [cards, setCards] = React.useState([]);
+  const [changeCard, setChangeCards] = React.useState(false);
 
   const [loggedIn, setLoggedIn] = React.useState(false);
 
   React.useEffect(() => {
     checkToken();
-  }, [history]);
-
-  // React.useEffect(() => {
-  //   if (loggedIn) {
-  //
-  //   }
-  // }, [history])
+  }, []);
 
   React.useEffect(() => {
     if (loggedIn) {
       history.push('/cards');
-      api.getProfile()
+    }
+  }, [loggedIn, history])
+
+  React.useEffect(() => {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      checkToken();
+      api.getProfile(jwt)
         .then((data) => {
-          console.log('--- 1 ---', data);
           setCurrentUser(data);
+          setEmail(data.user.email);
         })
         .catch((res) => {
           console.log(res);
         });
 
-      api.getCardList()
-        .then((data) => {
-          setCards(data);
-        })
-        .catch((res) => {
-          console.log(res);
-        });
+      // if (changeCard) {
+        api.getCardList(jwt)
+          .then((data) => {
+            setCards(data);
+          })
+          .catch((res) => {
+            console.log(res);
+          });
+        setChangeCards(false);
+      // }
     }
-  }, [loggedIn, history]);
+
+  },[loggedIn, changeCard]);
+
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
@@ -85,21 +92,27 @@ function App() {
   }
 
   const handleUpdateUser = (name, description) => {
-    api.editProfile(name, description).then((data) => {
-      setCurrentUser(data);
-      closeAllPopups();
-    }).catch((res) => {
-      console.log(res);
-    });
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      api.editProfile(name, description, jwt).then((data) => {
+        setCurrentUser(data);
+        closeAllPopups();
+      }).catch((res) => {
+        console.log(res);
+      });
+    }
   }
 
   const handleUpdateAvatar = (avatar) => {
-    api.editAvatar(avatar).then((data) => {
-      setCurrentUser(data);
-      closeAllPopups();
-    }).catch((res) => {
-      console.log(res);
-    })
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      api.editAvatar(avatar, jwt).then((data) => {
+        setCurrentUser(data);
+        closeAllPopups();
+      }).catch((res) => {
+        console.log(res);
+      })
+    }
   }
 
   const closeAllPopups = () => {
@@ -117,37 +130,50 @@ function App() {
   }
 
   const handleCardLike = (card) => {
-    const isLiked = card.likes.some(i => i._id === currentUser._id);
-    if (isLiked) {
-      api.deleteLike(card._id).then((newCard) => {
-        setCards((cards) => cards.map((c) => c._id === card._id ? newCard : c));
-      }).catch((res) => {
-        console.log(res);
-      });
-    } else {
-      api.addLike(card._id).then((newCard) => {
-        setCards((cards) => cards.map((c) => c._id === card._id ? newCard : c));
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      const isLiked = card.likes.some(i => i._id === currentUser._id);
+      if (isLiked) {
+        api.deleteLike(card._id, jwt).then((newCard) => {
+          setChangeCards(true);
+          // setCards((cards) => cards.map((c) => c._id === card._id ? newCard : c));
+        }).catch((res) => {
+          console.log(res);
+        });
+      } else {
+        api.addLike(card._id, jwt).then((newCard) => {
+          // setCards((cards) => cards.map((c) => c._id === card._id ? newCard : c));
+          setChangeCards(true);
+        }).catch((res) => {
+          console.log(res);
+        });
+      }
+    }
+  }
+
+  const handleDeleteCard = (card) => {
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      api.deleteCard(card._id, jwt).then(() => {
+        // setCards((cards) => cards.filter((c) => c._id === card._id));
+        setChangeCards(true);
       }).catch((res) => {
         console.log(res);
       });
     }
   }
 
-  const handleDeleteCard = (card) => {
-    api.deleteCard(card._id).then(() => {
-      setCards((cards) => cards.filter((c) => c._id === card._id));
-    }).catch((res) => {
-      console.log(res);
-    });
-  }
-
   const handleAddCard = (name, link) => {
-    api.addCard(name, link).then((newCard) => {
-      setCards([newCard, ...cards]);
-      closeAllPopups();
-    }).catch((res) => {
-      console.log(res);
-    });
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      api.addCard(name, link, jwt).then((newCard) => {
+        // setCards([...cards.cardList, newCard.card]);
+        setChangeCards(true);
+        closeAllPopups();
+      }).catch((res) => {
+        console.log(res);
+      });
+    }
   }
 
   const handleRegisterSubmit = ({email, password}) => {
@@ -164,11 +190,14 @@ function App() {
   const handlerLoginSubmit = ({email, password}) => {
     api.login({email, password})
       .then((data) => {
-        setCurrentUser(data);
-        localStorage.setItem('jwt', data.token);
-        setLoggedIn(true);
-        setEmail(email);
-        history.push('/cards');
+        if (data.token) {
+          localStorage.setItem('jwt', data.token);
+          setLoggedIn(true);
+          setCurrentUser(data);
+          history.push('/cards');
+        } else {
+          localStorage.removeItem('jwt');
+        }
       })
       .catch((err) => {
         setIsErrorPopupOpen(true);
@@ -181,24 +210,17 @@ function App() {
   }
 
   const checkToken = () => {
-    if (localStorage.getItem('jwt')) {
-      const jwt = localStorage.getItem('jwt');
-    //проверить токен
-      if(jwt) {
-        api.checkToken(jwt)
-          .then(data => {
-
-            setEmail(data.user.email);
-            setCurrentUser(data);
-            setLoggedIn(true);
-            console.log('--- 2 ---', data);
-          })
-          .catch(err => {
-            console.log(err);
-          })
-      }
-    } else {
-      history.push('/signin');
+    const jwt = localStorage.getItem('jwt');
+    if (jwt) {
+      api.checkToken(jwt)
+        .then(data => {
+          setEmail(data.user.email);
+          setCurrentUser(data);
+          setLoggedIn(true);
+        })
+        .catch(err => {
+          console.log(err);
+        })
     }
   }
 

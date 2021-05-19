@@ -11,7 +11,7 @@ module.exports.createCard = (req, res, next) => {
   const { _id } = req.user;
 
   Card.create({ name, link, owner: _id })
-    .then((user) => res.send({ data: user }))
+    .then((card) => res.send({ card }))
     .catch((err) => {
       if (err.name === 'ValidationError') {
         next(new BadRequestError(err.message));
@@ -24,7 +24,7 @@ module.exports.createCard = (req, res, next) => {
 
 module.exports.getCardList = (req, res, next) => {
   Card.find({})
-    .then((cardList) => res.send({ data: cardList }))
+    .then((cardList) => res.send({ cardList }))
     .catch(() => next(new InternalServerError('Ошибка по умолчанию.')));
 };
 

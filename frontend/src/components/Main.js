@@ -27,7 +27,22 @@ function Main(props) {
     e.preventDefault();
     props.onEditAvatar();
   }
-  console.log('--- 3 ---', currentUser);
+
+  const renderCard = (props) => {
+    if (props.cards.cardList) {
+      return  props.cards.cardList.map((card) => (
+        <Card
+          card={card}
+          key={card._id}
+          onClick={handleCardClick}
+          onCardLike={onCardLike}
+          onCardDelete={onCardDelete}
+        />)
+      )
+    } else {
+      return ;
+    }
+  }
 
   return (
     <>
@@ -64,15 +79,7 @@ function Main(props) {
       <section className="cards root__section root__cards">
         <ul className="places">
           {
-            // props.cards.map((card) => (
-            //   <Card
-            //     card={card}
-            //     key={card._id}
-            //     onClick={handleCardClick}
-            //     onCardLike={onCardLike}
-            //     onCardDelete={onCardDelete}
-            //   />)
-            // )
+            renderCard(props)
           }
         </ul>
       </section>

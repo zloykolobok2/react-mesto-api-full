@@ -1,6 +1,8 @@
 require('dotenv').config();
 
-const { JWT_SECRET = 'super-strong-secret' } = process.env;
+const { NODE_ENV = 'dev', JWT_SECRET = '' } = process.env;
+
+const jwtSecret = (NODE_ENV === 'production') ? JWT_SECRET : '';
 
 const jwt = require('jsonwebtoken');
 const UnauthorizedError = require('../errors/unauthorized-err');
@@ -22,7 +24,7 @@ module.exports = (req, res, next) => {
   let payload;
 
   try {
-    payload = jwt.verify(token, JWT_SECRET);
+    payload = jwt.verify(token, jwtSecret);
 
     req.user = {
       _id: payload._id,

@@ -3,9 +3,6 @@ import { apiConfig } from './utils';
 class Api {
   constructor(config) {
     this._url = config.url;
-    if (localStorage.getItem('jwt')) {
-      this._token = localStorage.getItem('jwt');
-    }
   }
 
   register({email, password}) {
@@ -41,13 +38,13 @@ class Api {
     })
   }
 
-  getProfile() {
+  getProfile(token) {
     const fullUrl = `${this._url}/users/me`;
     return fetch(fullUrl, {
       method: 'GET',
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${this._token}`
+        "Authorization": `Bearer ${token}`
       },
     }).then((res) => {
       if(res.ok) {
@@ -57,18 +54,17 @@ class Api {
     })
   }
 
-  getCardList() {
+  getCardList(token) {
     const fullUrl = `${this._url}/cards`;
     return fetch(fullUrl, {
       method: 'GET',
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${this._token}`
+        "Authorization": `Bearer ${token}`
       },
     }).then((res) => {
       if(res.ok) {
         const result = res.json();
-        // console.log(result)
         return result;
       }
       return Promise.reject(`Ошибка: ${res.status}`);
@@ -87,22 +83,94 @@ class Api {
     }).then((res) => {
       if(res.ok) {
         const result = res.json();
-        console.log(result);
         return result;
       }
       return Promise.reject(`Ошибка: ${res.status}`);
     })
   }
 
-  editProfile(name, about) {
+  editProfile(name, about, token) {
     const fullUrl = `${this._url}/users/me`;
     return fetch(fullUrl, {
       method: 'PATCH',
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${this._token}`
+        "Authorization": `Bearer ${token}`
       },
       body: JSON.stringify({name: name, about: about})
+    }).then((res) => {
+      if(res.ok) {
+        const result = res.json();
+        return result;
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+  }
+
+  editAvatar(link, token) {
+    const fullUrl = `${this._url}/users/me/avatar`;
+    return fetch(fullUrl, {
+      method: 'PATCH',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify( {avatar: link})
+    }).then((res) => {
+      if(res.ok) {
+        const result = res.json();
+        return result;
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+  }
+
+  addCard(name, link, token) {
+    // return this._sendPostRequest('cards', {name: name, link: link});
+    const fullUrl = `${this._url}/cards`;
+    return fetch(fullUrl, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+      body: JSON.stringify({name: name, link: link})
+    }).then((res) => {
+      if(res.ok) {
+        const result = res.json();
+        return result;
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+  }
+
+  addLike(cardId, token) {
+    // return this._sendPutRequest(`cards/likes/${cardId}`);
+    const fullUrl = `${this._url}/cards/${cardId}/likes`;
+    return fetch(fullUrl, {
+      method: 'PUT',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
+    }).then((res) => {
+      if(res.ok) {
+        const result = res.json();
+        return result;
+      }
+      return Promise.reject(`Ошибка: ${res.status}`);
+    })
+  }
+
+  deleteLike(cardId, token) {
+    // return this._sendDeleteRequest(`cards/likes/${cardId}`);
+    const fullUrl = `${this._url}/cards/${cardId}/likes`;
+    return fetch(fullUrl, {
+      method: 'DELETE',
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+      },
     }).then((res) => {
       if(res.ok) {
         const result = res.json();
@@ -113,24 +181,24 @@ class Api {
     })
   }
 
-  editAvatar(link) {
-    const fullUrl = `${this._url}/users/me/avatar`;
+  deleteCard(cardId, token) {
+    // return this._sendDeleteRequest(`cards/${cardId}`);
+    const fullUrl = `${this._url}/cards/${cardId}`;
     return fetch(fullUrl, {
-      method: 'PATCH',
+      method: 'DELETE',
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${this._token}`
+        "Authorization": `Bearer ${token}`
       },
-      body: JSON.stringify( {avatar: link})
     }).then((res) => {
       if(res.ok) {
         const result = res.json();
-        // console.log(result)
         return result;
       }
       return Promise.reject(`Ошибка: ${res.status}`);
     })
   }
+
 }
 
 const api = new Api(apiConfig);

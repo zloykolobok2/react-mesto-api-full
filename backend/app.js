@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { SERVER_PORT = 3000, DB_URL } = process.env;
+const { NODE_ENV = 'dev', SERVER_PORT = 3000, DB_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
 const express = require('express');
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
@@ -10,7 +10,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 
 const corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: 'https://rnikolaenkov.nomoredomains.icu',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE, OPTION',
   preflightContinue: false,
   optionsSuccessStatus: 204,
@@ -26,6 +26,11 @@ const error = require('./middlewares/error');
 
 const { login, createUser } = require('./controllers/users');
 
+const { requestLogger, errorLogger } = require('./middlewares/logger');
+
+const serverPort = (NODE_ENV === 'production') ? SERVER_PORT : 3001;
+const db = (NODE_ENV === 'production') ? DB_URL : 'mongodb://localhost:27017/mestodb';
+
 const app = express();
 
 const limiter = rateLimit({
@@ -40,6 +45,14 @@ app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
 app.use(express.json());
+
+app.use(requestLogger);
+
+app.get('/crash-test', () => {
+  setTimeout(() => {
+    throw new Error('Сервер сейчас упадёт');
+  }, 0);
+});
 
 app.post('/signin', celebrate({
   body: Joi.object().keys({
@@ -63,16 +76,18 @@ app.use('/users', users);
 app.use('/cards', cards);
 app.use('*', routes);
 
-mongoose.connect(DB_URL, {
+mongoose.connect(db, {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false,
   useUnifiedTopology: true,
 });
 
+app.use(errorLogger);
+
 app.use(errors());
 app.use(error);
 
 app.listen(SERVER_PORT, () => {
-  console.info(`Server started on server port ${SERVER_PORT}`);
+  console.info(`Server started on server port ${serverPort}`);
 });

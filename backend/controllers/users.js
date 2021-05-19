@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { CRYPT_ROUNDS = 10, JWT_SECRET = 'super-strong-secret' } = process.env;
+const { NODE_ENV = 'dev', CRYPT_ROUNDS = 10, JWT_SECRET = '' } = process.env;
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -12,12 +12,15 @@ const BadRequestError = require('../errors/bad-request-err');
 const UnauthorizedError = require('../errors/unauthorized-err');
 const InternalServerError = require('../errors/internal-server-err');
 
+const cryptRounds = (NODE_ENV === 'production') ? CRYPT_ROUNDS : 10;
+const jwtSecret = (NODE_ENV === 'production') ? JWT_SECRET : '';
+
 module.exports.createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
 
-  bcrypt.hash(password, parseInt(CRYPT_ROUNDS, 10))
+  bcrypt.hash(password, parseInt(cryptRounds, 10))
     .then((hash) => User.create({
       name, about, avatar, email, password: hash,
     }))
@@ -116,11 +119,9 @@ module.exports.login = (req, res, next) => {
     email, password,
   } = req.body;
 
-  console.log('----------------', email, password);
-
   User.findUserByCredentials(email, password)
     .then((user) => {
-      const token = jwt.sign({ _id: user._id }, JWT_SECRET, { expiresIn: '7d' });
+      const token = jwt.sign({ _id: user._id }, jwtSecret, { expiresIn: '7d' });
 
       res.send({ user, token });
     })
