@@ -4,9 +4,9 @@
 //
 // const jwtSecret = (NODE_ENV === 'production') ? JWT_SECRET : '';
 
-import { jwtSecret } from '../config/app';
-
 const jwt = require('jsonwebtoken');
+const { jwtSecret } = require('../config/app');
+
 const UnauthorizedError = require('../errors/unauthorized-err');
 
 const handleAuthError = (res, next) => {

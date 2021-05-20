@@ -1,10 +1,10 @@
 // require('dotenv').config();
 //
 // const { NODE_ENV = 'dev', CRYPT_ROUNDS = 10, JWT_SECRET = '' } = process.env;
-import { cryptRounds, jwtSecret } from '../config/app';
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { cryptRounds, jwtSecret } = require('../config/app');
 
 const User = require('../models/user');
 const ConflictError = require('../errors/conflict-err');

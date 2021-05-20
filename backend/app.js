@@ -1,7 +1,6 @@
 // require('dotenv').config();
 //
 // const { NODE_ENV = 'dev', SERVER_PORT = 3000, DB_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
-import { serverPort, db } from './config/app';
 
 const express = require('express');
 const mongoose = require('mongoose');
@@ -10,6 +9,7 @@ const { celebrate, Joi, errors } = require('celebrate');
 
 const helmet = require('helmet');
 const cors = require('cors');
+const { serverPort, db } = require('./config/app');
 
 const corsOptions = {
   origin: 'https://rnikolaenkov.nomoredomains.icu',
