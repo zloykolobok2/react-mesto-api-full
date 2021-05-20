@@ -1,6 +1,8 @@
-require('dotenv').config();
+// require('dotenv').config();
+//
+// const { NODE_ENV = 'dev', SERVER_PORT = 3000, DB_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
+import { serverPort, db } from './config/app';
 
-const { NODE_ENV = 'dev', SERVER_PORT = 3000, DB_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
 const express = require('express');
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');
@@ -28,8 +30,8 @@ const { login, createUser } = require('./controllers/users');
 
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 
-const serverPort = (NODE_ENV === 'production') ? SERVER_PORT : 3001;
-const db = (NODE_ENV === 'production') ? DB_URL : 'mongodb://localhost:27017/mestodb';
+// const serverPort = (NODE_ENV === 'production') ? SERVER_PORT : 3001;
+// const db = (NODE_ENV === 'production') ? DB_URL : 'mongodb://localhost:27017/mestodb';
 
 const app = express();
 
@@ -88,6 +90,6 @@ app.use(errorLogger);
 app.use(errors());
 app.use(error);
 
-app.listen(SERVER_PORT, () => {
+app.listen(serverPort, () => {
   console.info(`Server started on server port ${serverPort}`);
 });

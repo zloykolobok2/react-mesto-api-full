@@ -1,6 +1,7 @@
-require('dotenv').config();
-
-const { NODE_ENV = 'dev', CRYPT_ROUNDS = 10, JWT_SECRET = '' } = process.env;
+// require('dotenv').config();
+//
+// const { NODE_ENV = 'dev', CRYPT_ROUNDS = 10, JWT_SECRET = '' } = process.env;
+import { cryptRounds, jwtSecret } from '../config/app';
 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
@@ -12,8 +13,8 @@ const BadRequestError = require('../errors/bad-request-err');
 const UnauthorizedError = require('../errors/unauthorized-err');
 const InternalServerError = require('../errors/internal-server-err');
 
-const cryptRounds = (NODE_ENV === 'production') ? CRYPT_ROUNDS : 10;
-const jwtSecret = (NODE_ENV === 'production') ? JWT_SECRET : '';
+// const cryptRounds = (NODE_ENV === 'production') ? CRYPT_ROUNDS : 10;
+// const jwtSecret = (NODE_ENV === 'production') ? JWT_SECRET : '';
 
 module.exports.createUser = (req, res, next) => {
   const {
