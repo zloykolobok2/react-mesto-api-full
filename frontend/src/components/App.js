@@ -56,23 +56,23 @@ function App() {
     if (jwt) {
       checkToken();
       api.getProfile(jwt)
-        .then((data) => {
-          setCurrentUser(data);
-          setEmail(data.user.email);
-        })
-        .catch((res) => {
-          console.log(res);
-        });
+          .then((data) => {
+            setCurrentUser(data);
+            setEmail(data.user.email);
+          })
+          .catch((res) => {
+            console.log(res);
+          });
 
       // if (changeCard) {
-        api.getCardList(jwt)
+      api.getCardList(jwt)
           .then((data) => {
             setCards(data);
           })
           .catch((res) => {
             console.log(res);
           });
-        setChangeCards(false);
+      setChangeCards(false);
       // }
     }
 
@@ -178,30 +178,30 @@ function App() {
 
   const handleRegisterSubmit = ({email, password}) => {
     api.register({email, password})
-      .then((data) => {
-        history.push('/signin');
-        setIsSuccessPopupOpen(true);
-      })
-      .catch((err) => {
-        setIsErrorPopupOpen(true);
-      });
+        .then((data) => {
+          history.push('/signin');
+          setIsSuccessPopupOpen(true);
+        })
+        .catch((err) => {
+          setIsErrorPopupOpen(true);
+        });
   }
 
   const handlerLoginSubmit = ({email, password}) => {
     api.login({email, password})
-      .then((data) => {
-        if (data.token) {
-          localStorage.setItem('jwt', data.token);
-          setLoggedIn(true);
-          setCurrentUser(data);
-          history.push('/cards');
-        } else {
-          localStorage.removeItem('jwt');
-        }
-      })
-      .catch((err) => {
-        setIsErrorPopupOpen(true);
-      });
+        .then((data) => {
+          if (data.token) {
+            localStorage.setItem('jwt', data.token);
+            setLoggedIn(true);
+            setCurrentUser(data);
+            history.push('/cards');
+          } else {
+            localStorage.removeItem('jwt');
+          }
+        })
+        .catch((err) => {
+          setIsErrorPopupOpen(true);
+        });
   }
 
   const handleLogout = () => {
@@ -213,24 +213,24 @@ function App() {
     const jwt = localStorage.getItem('jwt');
     if (jwt) {
       api.checkToken(jwt)
-        .then(data => {
-          setEmail(data.user.email);
-          setCurrentUser(data);
-          setLoggedIn(true);
-        })
-        .catch(err => {
-          console.log(err);
-        })
+          .then(data => {
+            setEmail(data.user.email);
+            setCurrentUser(data);
+            setLoggedIn(true);
+          })
+          .catch(err => {
+            console.log(err);
+          })
     }
   }
 
   return (
-    <CurrentUserContext.Provider value={currentUser}>
-          <Header email = {email} onLogout = {handleLogout}/>
-          <main className="container">
-            <Switch>
+      <CurrentUserContext.Provider value={currentUser}>
+        <Header email = {email} onLogout = {handleLogout}/>
+        <main className="container">
+          <Switch>
 
-              <ProtectedRoute
+            <ProtectedRoute
                 path="/cards"
                 exact = {true}
                 loggedIn = {loggedIn}
@@ -242,72 +242,72 @@ function App() {
                 onCardLike={handleCardLike}
                 onCardDelete={handleDeleteCard}
                 cards={cards}
-              />
+            />
 
-              <Route path="/signin">
-                <Login
+            <Route path="/signin">
+              <Login
                   onSubmit = {handlerLoginSubmit}
-                />
-              </Route>
+              />
+            </Route>
 
-              <Route path="/signup">
-                <Register
+            <Route path="/signup">
+              <Register
                   onSubmit = {handleRegisterSubmit}
-                />
-              </Route>
+              />
+            </Route>
 
-            </Switch>
-          </main>
+          </Switch>
+        </main>
 
-          <Footer/>
+        <Footer/>
 
-          <EditProfilePopup
+        <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
             onUpdateUser={handleUpdateUser}
-          />
+        />
 
-          <AddPlacePopup
+        <AddPlacePopup
             isOpen={isAddPlacePopupOpen}
             onClose={closeAllPopups}
             onAddCard={handleAddCard}
-          />
+        />
 
-          <EditAvatarPopup
+        <EditAvatarPopup
             isOpen={isEditAvatarPopupOpen}
             onClose={closeAllPopups}
             onUpdateAvatar = {handleUpdateAvatar}
-          />
+        />
 
-          <ErrorMessagePopup
+        <ErrorMessagePopup
             isOpen = {isErrorPopupOpen}
             onClose = {closeAllPopups}
-          />
+        />
 
-          <SuccessMessagePopup
+        <SuccessMessagePopup
             isOpen = {isSuccessPopupOpen}
             onClose = {closeAllPopups}
-          />
+        />
 
 
-          {/* TODO: как будет время сделать подтверждение удаление карточки*/}
-          {/*<PopupWithForm*/}
-          {/*  name='delete-card'*/}
-          {/*  title='Вы уверены?'*/}
-          {/*  isOpen={isDeletePlacePopupOpen}*/}
-          {/*  onClose={closeAllPopups}*/}
-          {/*  buttonText='Сохранить'*/}
-          {/*>*/}
-          {/*  <input type="hidden" className="popup__input popup__input_card-id" defaultValue="" name="card-id"/>*/}
-          {/*</PopupWithForm>*/}
+        {/* TODO: как будет время сделать подтверждение удаление карточки*/}
+        {/*<PopupWithForm*/}
+        {/*  name='delete-card'*/}
+        {/*  title='Вы уверены?'*/}
+        {/*  isOpen={isDeletePlacePopupOpen}*/}
+        {/*  onClose={closeAllPopups}*/}
+        {/*  buttonText='Сохранить'*/}
+        {/*>*/}
+        {/*  <input type="hidden" className="popup__input popup__input_card-id" defaultValue="" name="card-id"/>*/}
+        {/*</PopupWithForm>*/}
 
-          <ImagePopup
+        <ImagePopup
             name='theme_photo'
             card={selectedCard}
             isOpen={isImagePopupOpen}
             onClose={closeAllPopups}
-          />
-    </CurrentUserContext.Provider>
+        />
+      </CurrentUserContext.Provider>
   );
 }
 

@@ -1,7 +1,6 @@
 // require('dotenv').config();
 //
 // const { NODE_ENV = 'dev', SERVER_PORT = 3000, DB_URL = 'mongodb://localhost:27017/mestodb' } = process.env;
-
 const express = require('express');
 const mongoose = require('mongoose');
 const rateLimit = require('express-rate-limit');

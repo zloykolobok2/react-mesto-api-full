@@ -1,6 +1,6 @@
 # backend
 backend/logs
-backend/.env
+backend/.env.ex
 backend/node_modules
 
 #frontend
